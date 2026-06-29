@@ -1,7 +1,9 @@
 import path from "path";
 import fs from "fs";
 import { test } from "@playwright/test";
-import { LoginPage } from "../pages/LoginPage";
+import { Login } from "../pages/Login";
+
+const authFile = path.join(__dirname, "../playwright/.auth/user.json");
 
 const loginDataFile = path.resolve(
   __dirname,
@@ -14,7 +16,11 @@ const loginData = JSON.parse(fs.readFileSync(loginDataFile, "utf-8")) as {
 };
 
 test("authenticate", async ({ page }) => {
-  const loginPage = new LoginPage(page);
+  const loginPage = new Login(page);
 
   await loginPage.sign_in(loginData.user, loginData.pass);
+
+  await page.context().storageState({
+    path: authFile,
+  });
 });
