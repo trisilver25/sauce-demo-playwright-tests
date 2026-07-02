@@ -5,29 +5,37 @@ test("Add a product to cart", async ({ page }) => {
   await page.goto("/inventory.html");
 
   // Retrieve the first product item
-  let firstProductCard = page.locator(".inventory_item").first();
+  const firstProductCard = page.locator(".inventory_item").first();
 
   // Store the products name from the 1st product card.
-  let firstProductName = await firstProductCard
+  const firstProductName = await firstProductCard
     .locator(".inventory_item_name")
-    .textContent();
+    .first()
+    .textContent()!;
 
   // Store the add to cart button from the 1st product card.
-  let firstButton = await firstProductCard.getByRole("button", {
+  const firstButton = firstProductCard.getByRole("button", {
     name: "Add to cart",
   });
 
   // Click "Add to Cart"
   await firstButton.click();
 
+  // Store shopping cart button to check the notification with an expect
+  const cartButton = page.locator(".shopping_cart_link");
+
+  // Confirm the "1" displays in the cart button notification
+  await expect(cartButton).toContainText("1");
+
   // Click "Shopping Cart"
-  await page.locator(".shopping_cart_link").click();
+  await cartButton.click();
 
   // Pull the recently added cart item's name.
-  let cartProductName = await page
+  const cartProductName = page
     .locator(".inventory_item_name")
+    .first()
     .textContent();
 
   // Confirm the 1st product name matches the cart name
-  expect(firstProductName).toEqual(cartProductName);
+  await expect(firstProductName).toEqual(cartProductName);
 });
