@@ -31,7 +31,7 @@ test("Add a product to cart", async ({ page }) => {
   await cartButton.click();
 
   // Pull the recently added cart item's name.
-  const cartProductName = page
+  const cartProductName = await page
     .locator(".inventory_item_name")
     .first()
     .textContent();
