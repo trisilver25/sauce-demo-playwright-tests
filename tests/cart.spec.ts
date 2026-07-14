@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { Products } from "../pages/Products";
+import { Cart } from "../pages/Cart";
 
 test("Add a product to cart", async ({ page }) => {
   // Go to products page
@@ -111,4 +112,33 @@ test("Remove an item from the cart", async ({ page }) => {
 
   // Verify Inventory item is no longer visible
   expect(page.locator("[data-test='inventory-item']")).toBeHidden();
+});
+
+test("Verify Cont Shopping Button", async ({ page }) => {
+  await page.goto("/cart.html");
+
+  // Create a cart pom
+  const CartPage = new Cart(page);
+
+  // Click Continue Shopping Button
+  await CartPage.cont_shopping_btn.click();
+
+  // Verify user is brought back to Inventory Page
+  await expect(page.url()).toEqual("https://www.saucedemo.com/inventory.html");
+});
+
+// TODO: Fix Bug, failing at the Assertion
+test("Verify Checkout button functions", async ({ page }) => {
+  await page.goto("/cart.html");
+
+  // Create a cart pom
+  const CartPage = new Cart(page);
+
+  // Click Checkout Button
+  CartPage.checkout_btn.click();
+
+  // Verify user is brought to check out page
+  await expect(page.url()).toEqual(
+    "https://www.saucedemo.com/checkout-step-one.html",
+  );
 });
