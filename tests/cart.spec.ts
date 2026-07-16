@@ -109,7 +109,6 @@ test("Verify Cont Shopping Button", async ({ page }) => {
   await expect(page.url()).toEqual("https://www.saucedemo.com/inventory.html");
 });
 
-// TODO: Fix Bug, failing at the Assertion
 test("Verify Checkout button functions", async ({ page }) => {
   await page.goto("/cart.html");
 
@@ -120,7 +119,7 @@ test("Verify Checkout button functions", async ({ page }) => {
   CartPage.checkoutBtn.click();
 
   // Verify user is brought to check out page
-  await expect(page.url()).toEqual(
+  await expect(page).toHaveURL(
     "https://www.saucedemo.com/checkout-step-one.html",
   );
 });
