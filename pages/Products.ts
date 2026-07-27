@@ -14,4 +14,8 @@ export class Products {
   async getNthProductCard(num: number) {
     return this.productCards.locator('[data-test="inventory-item"]').nth(num);
   }
+
+  async getProductName(product: Locator) {
+    return product.locator('[data-test="inventory-item-name"]').innerText;
+  }
 }
