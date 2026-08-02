@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import { test } from "@playwright/test";
 import { Login } from "../pages/Login";
+import { Users } from "../types/Users";
 
 const authFile = path.join(__dirname, "../playwright/.auth/user.json");
 
@@ -14,29 +15,25 @@ const loginDataFile = path.resolve(
 const isFilePresent = fs.existsSync(loginDataFile);
 
 // Variable to hold LoginData
-let loginData:
-  | {
-      user: string;
-      pass: string;
-    }
-  | undefined;
+let users: Users[] | undefined;
 
 // If the file is present add the user data to the loginData variable.
 if (isFilePresent) {
-  loginData = JSON.parse(fs.readFileSync(loginDataFile, "utf-8")) as {
-    user: string;
-    pass: string;
-  };
+  users = JSON.parse(fs.readFileSync(loginDataFile, "utf-8")) as Users[];
 }
+
+// Find the standard user within the Users Array and assign to the variable
+let standardUser = users?.find((t) => t.type === "standard");
 
 // Variables to hold the GitHub Secret
 const userName: string | undefined = process.env.SAUCE_DEMO_USER;
 const pass: string | undefined = process.env.SAUCE_DEMO_PASS;
 
 // Variable to hold either the Local User/Pass or the Secret Variable User/Pass
-const finalUsername = loginData?.user || userName;
-const finalPassword = loginData?.pass || pass;
+const finalUsername = standardUser?.user || userName;
+const finalPassword = standardUser?.pass || pass;
 
+// Verify finalUsername and finalpassword are NOT empty
 if (!finalUsername || !finalPassword) {
   throw new Error("Username and Password were not provided.");
 }
