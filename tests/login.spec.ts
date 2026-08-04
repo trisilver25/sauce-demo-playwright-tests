@@ -14,7 +14,7 @@ test.use({
 // Grab the location of the LoginData Path.
 const loginDataFile = path.resolve(
   __dirname,
-  "../playwright/.auth/loginData.json",
+  "../playwright/.auth/userCreds.json",
 );
 
 // Check if Local File Exists

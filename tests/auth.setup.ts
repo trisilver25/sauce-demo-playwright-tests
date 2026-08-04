@@ -8,7 +8,7 @@ const authFile = path.join(__dirname, "../playwright/.auth/user.json");
 
 const loginDataFile = path.resolve(
   __dirname,
-  "../playwright/.auth/loginData.json",
+  "../playwright/.auth/userCreds.json",
 );
 
 // Check if the Local File is present
