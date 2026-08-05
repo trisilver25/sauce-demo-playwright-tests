@@ -2,14 +2,25 @@ import { test, expect } from "@playwright/test";
 import { Products } from "../pages/Products";
 
 test("Verify default A-Z filter", async ({ page }) => {
-  page.goto("inventory.html");
+  await page.goto("inventory.html");
 
   const ProductsPage = new Products(page);
 
-  const product = await ProductsPage.getNthProductCard(0);
+  let prevProduct = await ProductsPage.getNthProductCard(0);
 
-  const productName = ProductsPage.getProductName(product);
+  let prevProductName = await ProductsPage.getProductName(prevProduct);
 
-  // TO DO Fix Assertion
-  // expect(productName).toBeGr
+  const count = await ProductsPage.getProductCount();
+
+  for (let i = 0; i < count; i++) {
+    if (i + 1 != count) {
+      let currProductName = await ProductsPage.getProductName(
+        await ProductsPage.getNthProductCard(i + 1),
+      );
+      await expect(prevProductName <= currProductName).toBeTruthy();
+      prevProductName = currProductName;
+    } else {
+      break;
+    }
+  }
 });
