@@ -56,3 +56,30 @@ test("Verify Z-A filter", async ({ page }) => {
     }
   }
 });
+
+test("Verify Price (L to H) filter", async ({ page }) => {
+  await page.goto("inventory.html");
+
+  const ProductsPage = new Products(page);
+
+  // Select the Lo-Hi filter
+  await ProductsPage.setDropDownFilter("lohi");
+
+  let prevProduct = await ProductsPage.getNthProductCard(0);
+
+  let prevProductPrice = await ProductsPage.getProductPrice(prevProduct);
+
+  const count = await ProductsPage.getProductCount();
+
+  for (let i = 0; i < count; i++) {
+    if (i + 1 != count) {
+      let currProductPrice = await ProductsPage.getProductPrice(
+        await ProductsPage.getNthProductCard(i + 1),
+      );
+      await expect(prevProductPrice <= currProductPrice).toBeTruthy();
+      prevProductPrice = currProductPrice;
+    } else {
+      break;
+    }
+  }
+});

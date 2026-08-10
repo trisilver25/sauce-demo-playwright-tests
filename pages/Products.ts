@@ -25,6 +25,12 @@ export class Products {
     return product.locator('[data-test="inventory-item-name"]').innerText();
   }
 
+  async getProductPrice(product: Locator) {
+    let raw = product.locator('[data-test="inventory-item-price"]').innerText();
+    let num = Number((await raw).replace(/[^\d.-]/g, ""));
+    return num;
+  }
+
   async setDropDownFilter(option: string) {
     await this.dropDown.selectOption(option);
   }
