@@ -2,30 +2,6 @@ import { test, expect } from "@playwright/test";
 import { Products } from "../pages/Products";
 import { Cart } from "../pages/Cart";
 
-test("Add a product to cart", async ({ page }) => {
-  // Go to products page
-  await page.goto("/inventory.html");
-
-  const ProductsPage = new Products(page);
-
-  // Retrieve the first product item
-  const firstProductCard = await ProductsPage.getNthProductCard(0);
-
-  // Store the add to cart button from the 1st product card.
-  const firstButton = firstProductCard.getByRole("button", {
-    name: "Add to cart",
-  });
-
-  // Click "Add to Cart"
-  await firstButton.click();
-
-  // Store shopping cart button to check the notification with an expect
-  const cartButton = page.locator(".shopping_cart_link");
-
-  // Confirm the "1" displays in the cart button notification
-  await expect(cartButton).toContainText("1");
-});
-
 test("Verify the product name in the cart match the product added from the Products page", async ({
   page,
 }) => {

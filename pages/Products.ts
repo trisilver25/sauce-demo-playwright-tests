@@ -6,11 +6,15 @@ export class Products {
 
   readonly productCards: Locator;
   readonly dropDown: Locator;
+  readonly burgerMenu: Locator;
+  readonly about: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.productCards = page.locator('[data-test="inventory-list"]');
     this.dropDown = page.locator('[data-test="product-sort-container"]');
+    this.burgerMenu = page.locator("#react-burger-menu-btn");
+    this.about = page.locator("#about_sidebar_link");
   }
 
   async getProductCount() {
