@@ -149,3 +149,16 @@ test("Navigate to About Us", async ({ page }) => {
 
   await expect(currUrl).toContain("saucelabs.com");
 });
+
+test("Logout", async ({ page }) => {
+  await page.goto("inventory.html");
+
+  const ProductPage = new Products(page);
+
+  await ProductPage.burgerMenu.click();
+
+  await ProductPage.logout.click();
+
+  // Check if the URL Changed back to the original.
+  await expect(page).toHaveURL("");
+});

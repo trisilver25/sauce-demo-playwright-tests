@@ -8,6 +8,7 @@ export class Products {
   readonly dropDown: Locator;
   readonly burgerMenu: Locator;
   readonly about: Locator;
+  readonly logout: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -15,6 +16,7 @@ export class Products {
     this.dropDown = page.locator('[data-test="product-sort-container"]');
     this.burgerMenu = page.locator("#react-burger-menu-btn");
     this.about = page.locator("#about_sidebar_link");
+    this.logout = page.locator("#logout_sidebar_link");
   }
 
   async getProductCount() {
