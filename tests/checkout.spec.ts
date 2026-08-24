@@ -1,9 +1,16 @@
 import { test, expect } from "@playwright/test";
+import { Checkout } from "../pages/Checkout";
 
 test("Verify checkout form errors out on submit", async ({ page }) => {
   page.goto("/checkout-step-one.html");
 
-  await page.locator('[data-test="continue"]').click();
+  const CheckoutPage = new Checkout(page);
 
-  expect(page.locator(".error-message-container")).toBeVisible();
+  await CheckoutPage.continueBtn.click();
+
+  expect(CheckoutPage.error).toBeVisible();
+
+  expect(CheckoutPage.getErrorMessage()).resolves.toContain(
+    "Error: First Name is required",
+  );
 });
