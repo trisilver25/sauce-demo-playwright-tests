@@ -1,6 +1,30 @@
 import { test, expect } from "@playwright/test";
 import { Products } from "../pages/Products";
 
+test("Add a product to cart", async ({ page }) => {
+  // Go to products page
+  await page.goto("/inventory.html");
+
+  const ProductsPage = new Products(page);
+
+  // Retrieve the first product item
+  const firstProductCard = await ProductsPage.getNthProductCard(0);
+
+  // Store the add to cart button from the 1st product card.
+  const firstButton = firstProductCard.getByRole("button", {
+    name: "Add to cart",
+  });
+
+  // Click "Add to Cart"
+  await firstButton.click();
+
+  // Store shopping cart button to check the notification with an expect
+  const cartButton = page.locator(".shopping_cart_link");
+
+  // Confirm the "1" displays in the cart button notification
+  await expect(cartButton).toContainText("1");
+});
+
 test("Verify default A-Z filter", async ({ page }) => {
   await page.goto("inventory.html");
 
@@ -55,4 +79,86 @@ test("Verify Z-A filter", async ({ page }) => {
       break;
     }
   }
+});
+
+test("Verify Price (L to H) filter", async ({ page }) => {
+  await page.goto("inventory.html");
+
+  const ProductsPage = new Products(page);
+
+  // Select the Lo-Hi filter
+  await ProductsPage.setDropDownFilter("lohi");
+
+  let prevProduct = await ProductsPage.getNthProductCard(0);
+
+  let prevProductPrice = await ProductsPage.getProductPrice(prevProduct);
+
+  const count = await ProductsPage.getProductCount();
+
+  for (let i = 0; i < count; i++) {
+    if (i + 1 != count) {
+      let currProductPrice = await ProductsPage.getProductPrice(
+        await ProductsPage.getNthProductCard(i + 1),
+      );
+      await expect(prevProductPrice <= currProductPrice).toBeTruthy();
+      prevProductPrice = currProductPrice;
+    } else {
+      break;
+    }
+  }
+});
+
+test("Verify Price (H to L) filter", async ({ page }) => {
+  await page.goto("inventory.html");
+
+  const ProductsPage = new Products(page);
+
+  // Select the Hi-Lo filter
+  await ProductsPage.setDropDownFilter("hilo");
+
+  let prevProduct = await ProductsPage.getNthProductCard(0);
+
+  let prevProductPrice = await ProductsPage.getProductPrice(prevProduct);
+
+  const count = await ProductsPage.getProductCount();
+
+  for (let i = 0; i < count; i++) {
+    if (i + 1 != count) {
+      let currProductPrice = await ProductsPage.getProductPrice(
+        await ProductsPage.getNthProductCard(i + 1),
+      );
+      await expect(prevProductPrice >= currProductPrice).toBeTruthy();
+      prevProductPrice = currProductPrice;
+    } else {
+      break;
+    }
+  }
+});
+
+test("Navigate to About Us", async ({ page }) => {
+  await page.goto("inventory.html");
+
+  const ProductPage = new Products(page);
+
+  await ProductPage.burgerMenu.click();
+
+  await ProductPage.about.click();
+
+  // Pull the current URL of the Page
+  const currUrl = await page.url();
+
+  await expect(currUrl).toContain("saucelabs.com");
+});
+
+test("Logout", async ({ page }) => {
+  await page.goto("inventory.html");
+
+  const ProductPage = new Products(page);
+
+  await ProductPage.burgerMenu.click();
+
+  await ProductPage.logout.click();
+
+  // Check if the URL Changed back to the original.
+  await expect(page).toHaveURL("");
 });
