@@ -11,7 +11,19 @@ export class Cart {
   // Constructor
   constructor(page: Page) {
     this.page = page;
-    this.contShopBtn = page.locator("[data-test='continue-shopping']");
-    this.checkoutBtn = page.locator("[data-test='checkout']");
+    this.contShopBtn = page.getByRole("button", {
+      name: "Continue Shopping",
+    });
+    this.checkoutBtn = page.getByRole("button", {
+      name: "Checkout",
+    });
+  }
+
+  async clickContShpBtn() {
+    await this.contShopBtn.click();
+  }
+
+  async clickCheckoutBtn() {
+    await this.checkoutBtn.click();
   }
 }

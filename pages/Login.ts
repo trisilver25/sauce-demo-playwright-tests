@@ -14,8 +14,10 @@ export class Login {
     this.page = page;
     this.userInput = page.getByPlaceholder("Username");
     this.passwordInput = page.getByPlaceholder("Password");
-    this.loginButton = page.locator('[data-test="login-button"]');
-    this.error = page.locator('[data-test="error"]');
+    this.loginButton = page.getByRole("button", {
+      name: "Login",
+    });
+    this.error = page.getByTestId("error");
   }
 
   async sign_in(user: string, pass: string) {
@@ -23,13 +25,5 @@ export class Login {
     await this.userInput.fill(user);
     await this.passwordInput.fill(pass);
     await this.loginButton.click();
-  }
-
-  async isErrorVisible() {
-    return this.error.isVisible();
-  }
-
-  async getErrorMessage() {
-    return this.error.innerText();
   }
 }

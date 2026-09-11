@@ -12,15 +12,13 @@ export class Checkout {
 
   constructor(page: Page) {
     this.page = page;
-    this.continueBtn = page.locator('[data-test="continue"]');
-    this.error = page.locator('[data-test="error"]');
-    this.firstNameField = page.locator('[data-test="firstName"]');
-    this.lastNameField = page.locator('[data-test="lastName"]');
-    this.postalCodeField = page.locator('[data-test="postalCode"]');
-  }
-
-  async getErrorMessage() {
-    return this.error.innerText();
+    this.continueBtn = page.getByRole("button", {
+      name: "Continue",
+    });
+    this.error = page.getByTestId("error");
+    this.firstNameField = page.getByPlaceholder("First Name");
+    this.lastNameField = page.getByPlaceholder("Last Name");
+    this.postalCodeField = page.getByPlaceholder("Zip/Postal Code");
   }
 
   async setFirstName(name: string) {
@@ -33,5 +31,9 @@ export class Checkout {
 
   async setPostalCode(zip: string) {
     await this.postalCodeField.fill(zip);
+  }
+
+  async clickContinueBtn() {
+    await this.continueBtn.click();
   }
 }

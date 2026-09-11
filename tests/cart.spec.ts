@@ -27,18 +27,15 @@ test("Verify the product name in the cart match the product added from the Produ
   // Click "Add to Cart"
   await firstButton.click();
 
-  // Store shopping cart button to check the notification with an expect
-  const cartButton = page.locator(".shopping_cart_link");
-
   // Confirm the "1" displays in the cart button notification
-  await expect(cartButton).toContainText("1");
+  await expect(ProductsPage.shoppingCartBtn).toHaveText("1");
 
   // Click "Shopping Cart"
-  await cartButton.click();
+  await ProductsPage.clickShoppingCartBtn();
 
   // Pull the recently added cart item's name.
   const cartProductName = await page
-    .locator(".inventory_item_name")
+    .getByTestId("inventory-item-name")
     .first()
     .textContent();
 
@@ -63,13 +60,18 @@ test("Remove an item from the cart", async ({ page }) => {
   // Click "Add to Cart"
   await firstButton.click();
 
-  await page.locator(".shopping_cart_link").click();
+  await ProductsPage.clickShoppingCartBtn();
 
   // Click "Remove" on the first Cart item
-  await page.locator("[data-test='remove-sauce-labs-backpack']").click();
+  await page
+    .getByRole("button", {
+      name: "Remove",
+    })
+    .first()
+    .click();
 
   // Verify Inventory item is no longer visible
-  await expect(page.locator("[data-test='inventory-item']")).toBeHidden();
+  await expect(page.getByTestId("inventory-item")).toBeHidden();
 });
 
 test("Verify Cont Shopping Button", async ({ page }) => {
@@ -79,10 +81,10 @@ test("Verify Cont Shopping Button", async ({ page }) => {
   const CartPage = new Cart(page);
 
   // Click Continue Shopping Button
-  await CartPage.contShopBtn.click();
+  await CartPage.clickContShpBtn();
 
   // Verify user is brought back to Inventory Page
-  await expect(page.url()).toEqual("https://www.saucedemo.com/inventory.html");
+  await expect(page).toHaveURL("https://www.saucedemo.com/inventory.html");
 });
 
 test("Verify Checkout button functions", async ({ page }) => {
@@ -92,7 +94,7 @@ test("Verify Checkout button functions", async ({ page }) => {
   const CartPage = new Cart(page);
 
   // Click Checkout Button
-  CartPage.checkoutBtn.click();
+  CartPage.clickCheckoutBtn();
 
   // Verify user is brought to check out page
   await expect(page).toHaveURL(

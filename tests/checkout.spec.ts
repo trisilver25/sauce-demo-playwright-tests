@@ -6,13 +6,11 @@ test("Verify checkout form errors out on submit", async ({ page }) => {
 
   const CheckoutPage = new Checkout(page);
 
-  await CheckoutPage.continueBtn.click();
+  await CheckoutPage.clickContinueBtn();
 
   expect(CheckoutPage.error).toBeVisible();
 
-  expect(CheckoutPage.getErrorMessage()).resolves.toContain(
-    "Error: First Name is required",
-  );
+  expect(CheckoutPage.error).toHaveText("Error: First Name is required");
 });
 
 test("Verify checkout form errors with first name only filled in", async ({
@@ -24,13 +22,11 @@ test("Verify checkout form errors with first name only filled in", async ({
 
   await CheckoutPage.setFirstName("Pokemon");
 
-  await CheckoutPage.continueBtn.click();
+  await CheckoutPage.clickContinueBtn();
 
   expect(CheckoutPage.error).toBeVisible();
 
-  expect(CheckoutPage.getErrorMessage()).resolves.toContain(
-    "Error: Last Name is required",
-  );
+  expect(CheckoutPage.error).toHaveText("Error: Last Name is required");
 });
 
 test("Verify checkout form errors with first, and last name only filled in", async ({
@@ -44,13 +40,11 @@ test("Verify checkout form errors with first, and last name only filled in", asy
 
   await CheckoutPage.setLastName("Smit");
 
-  await CheckoutPage.continueBtn.click();
+  await CheckoutPage.clickContinueBtn();
 
   expect(CheckoutPage.error).toBeVisible();
 
-  expect(CheckoutPage.getErrorMessage()).resolves.toContain(
-    "Error: Postal Code is required",
-  );
+  expect(CheckoutPage.error).toHaveText("Error: Postal Code is required");
 });
 
 test("Verify on click, the user is redirected to step test 2", async ({
@@ -66,7 +60,7 @@ test("Verify on click, the user is redirected to step test 2", async ({
 
   await CheckoutPage.setPostalCode("32822");
 
-  await CheckoutPage.continueBtn.click();
+  await CheckoutPage.clickContinueBtn();
 
   await expect(page).toHaveURL(
     "https://www.saucedemo.com/checkout-step-two.html",
