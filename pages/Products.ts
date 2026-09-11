@@ -9,35 +9,77 @@ export class Products {
   readonly burgerMenu: Locator;
   readonly about: Locator;
   readonly logout: Locator;
+  readonly shoppingCartBtn: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.productCards = page.locator('[data-test="inventory-list"]');
-    this.dropDown = page.locator('[data-test="product-sort-container"]');
-    this.burgerMenu = page.locator("#react-burger-menu-btn");
-    this.about = page.locator("#about_sidebar_link");
-    this.logout = page.locator("#logout_sidebar_link");
+    this.productCards = page.getByTestId("inventory-container");
+    this.dropDown = page.getByRole("combobox");
+    this.burgerMenu = page.getByRole("button", {
+      name: "Open Menu",
+    });
+    this.about = page.getByRole("link", {
+      name: "About",
+    });
+    this.logout = page.getByRole("button", {
+      name: "Logout",
+    });
+    this.shoppingCartBtn = this.page.getByTestId("shopping-cart-link");
   }
 
   async getProductCount() {
-    return this.productCards.locator('[data-test="inventory-item"]').count();
+    return this.productCards.getByTestId("inventory-item").count();
   }
 
   async getNthProductCard(num: number) {
-    return this.productCards.locator('[data-test="inventory-item"]').nth(num);
+    return this.productCards.getByTestId("inventory-item").nth(num);
   }
 
   async getProductName(product: Locator) {
-    return product.locator('[data-test="inventory-item-name"]').innerText();
+    return product.getByTestId("inventory-item-name").innerText();
   }
 
-  async getProductPrice(product: Locator) {
-    let raw = product.locator('[data-test="inventory-item-price"]').innerText();
-    let num = Number((await raw).replace(/[^\d.-]/g, ""));
-    return num;
+  async getAllProductPrices() {
+    const rawPrices = await this.productCards
+      .getByTestId("inventory-item-price")
+      .allInnerTexts();
+    return rawPrices.map((raw) => this.parsePrice(raw));
   }
 
   async setDropDownFilter(option: string) {
     await this.dropDown.selectOption(option);
+  }
+
+  async clickNavMenuBtn(name: string) {
+    await this.burgerMenu.click();
+
+    if (name.toLowerCase() === "about") {
+      await this.about.click();
+
+      return;
+    }
+
+    if (name.toLowerCase() === "logout") {
+      await this.logout.click();
+
+      return;
+    }
+
+    console.log(
+      "The provided string does not match the expectation of this function",
+    );
+  }
+
+  async clickShoppingCartBtn() {
+    await this.shoppingCartBtn.click();
+  }
+
+  async getAllProductNames() {
+    return this.productCards.getByTestId("inventory-item-name").allInnerTexts();
+  }
+
+  // Helper methods
+  private parsePrice(raw: string): number {
+    return Number(raw.replace(/[^\d.-]/g, ""));
   }
 }

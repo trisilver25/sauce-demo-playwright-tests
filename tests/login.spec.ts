@@ -74,10 +74,10 @@ test("Verify error message, for a missing username", async ({ page }) => {
   await LoginPage.loginButton.click();
 
   // Verify an error is visible
-  await expect(LoginPage.isErrorVisible()).toBeTruthy();
+  await expect(LoginPage.error).toBeVisible();
 
   // Verify the expected error message displays
-  await expect(LoginPage.getErrorMessage()).resolves.toContain(
+  await expect(LoginPage.error).toHaveText(
     "Epic sadface: Username is required",
   );
 });
@@ -93,9 +93,9 @@ test("Verify error message, for a missing password", async ({ page }) => {
   await LoginPage.loginButton.click();
 
   // Verify an error is visible
-  await expect(LoginPage.isErrorVisible()).toBeTruthy();
+  await expect(LoginPage.error).toBeVisible();
   // Verify the expected error message displays
-  await expect(LoginPage.getErrorMessage()).resolves.toContain(
+  await expect(LoginPage.error).toHaveText(
     "Epic sadface: Password is required",
   );
 });
@@ -113,10 +113,10 @@ test("Verify error message, for an incorrect password", async ({ page }) => {
   await LoginPage.loginButton.click();
 
   // Verify an error is visible
-  await expect(LoginPage.isErrorVisible()).toBeTruthy();
+  await expect(LoginPage.error).toBeVisible();
 
   // Verify the expected error message displays
-  await expect(LoginPage.getErrorMessage()).resolves.toContain(
+  await expect(LoginPage.error).toHaveText(
     "Epic sadface: Username and password do not match any user in this service",
   );
 });
@@ -130,10 +130,10 @@ test("Verify error message, for a Locked Out User", async ({ page }) => {
   await LoginPage.loginButton.click();
 
   // Verify an error is visible
-  await expect(LoginPage.isErrorVisible()).resolves.toBeTruthy();
+  await expect(LoginPage.error).toBeVisible();
 
   // Verify the expected error message displays
-  await expect(LoginPage.getErrorMessage()).resolves.toContain(
+  await expect(LoginPage.error).toHaveText(
     "Epic sadface: Sorry, this user has been locked out.",
   );
 });
