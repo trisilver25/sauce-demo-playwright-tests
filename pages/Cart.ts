@@ -19,6 +19,11 @@ export class Cart {
     });
   }
 
+  // Methods
+  async goto() {
+    await this.page.goto("/cart.html");
+  }
+
   async clickContShpBtn() {
     await this.contShopBtn.click();
   }

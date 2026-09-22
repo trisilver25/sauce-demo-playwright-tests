@@ -20,6 +20,10 @@ export class Login {
     this.error = page.getByTestId("error");
   }
 
+  async goto() {
+    this.page.goto("/");
+  }
+
   async sign_in(user: string, pass: string) {
     await this.page.goto("");
     await this.userInput.fill(user);

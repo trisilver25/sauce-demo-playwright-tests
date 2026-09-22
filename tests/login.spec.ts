@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../fixtures/sauce-fixtures";
 import { Login } from "../pages/Login";
 import { Users } from "../types/Users";
 import fs from "fs";
@@ -60,80 +60,66 @@ if (
   throw new Error("Username and Password were not provided.");
 }
 
-// BeforeEach test go to the loginpage of SauceDemo.
-test.beforeEach(async ({ page }) => {
-  // Go to Login Page
-  await page.goto("");
-});
-
-test("Verify error message, for a missing username", async ({ page }) => {
-  // Create a LoginPage Object
-  const LoginPage = new Login(page);
-
+test("Verify error message, for a missing username", async ({ loginPage }) => {
   // Click "Login"
-  await LoginPage.loginButton.click();
+  await loginPage.loginButton.click();
 
   // Verify an error is visible
-  await expect(LoginPage.error).toBeVisible();
+  await expect(loginPage.error).toBeVisible();
 
   // Verify the expected error message displays
-  await expect(LoginPage.error).toHaveText(
+  await expect(loginPage.error).toHaveText(
     "Epic sadface: Username is required",
   );
 });
 
-test("Verify error message, for a missing password", async ({ page }) => {
-  // Create a LoginPage Object
-  const LoginPage = new Login(page);
-
+test("Verify error message, for a missing password", async ({ loginPage }) => {
   // Fill in the username field using the testUser
-  await LoginPage.userInput.fill(finalErrorUser);
+  await loginPage.userInput.fill(finalErrorUser);
 
   // Click "Login"
-  await LoginPage.loginButton.click();
+  await loginPage.loginButton.click();
 
   // Verify an error is visible
-  await expect(LoginPage.error).toBeVisible();
+  await expect(loginPage.error).toBeVisible();
   // Verify the expected error message displays
-  await expect(LoginPage.error).toHaveText(
+  await expect(loginPage.error).toHaveText(
     "Epic sadface: Password is required",
   );
 });
 
-test("Verify error message, for an incorrect password", async ({ page }) => {
-  const LoginPage = new Login(page);
-
+test("Verify error message, for an incorrect password", async ({
+  loginPage,
+}) => {
   // Fill in the username field using the testUser
-  await LoginPage.userInput.fill(finalErrorUser);
+  await loginPage.userInput.fill(finalErrorUser);
 
   // Fill in the password field using testUser
-  await LoginPage.passwordInput.fill(finalErrorPass);
+  await loginPage.passwordInput.fill(finalErrorPass);
 
   // Click "Login"
-  await LoginPage.loginButton.click();
+  await loginPage.loginButton.click();
 
   // Verify an error is visible
-  await expect(LoginPage.error).toBeVisible();
+  await expect(loginPage.error).toBeVisible();
 
   // Verify the expected error message displays
-  await expect(LoginPage.error).toHaveText(
+  await expect(loginPage.error).toHaveText(
     "Epic sadface: Username and password do not match any user in this service",
   );
 });
 
-test("Verify error message, for a Locked Out User", async ({ page }) => {
-  const LoginPage = new Login(page);
+test("Verify error message, for a Locked Out User", async ({ loginPage }) => {
+  await loginPage.userInput.fill(finalLockedUser);
+  await loginPage.passwordInput.fill(finalLockedPass);
 
-  await LoginPage.userInput.fill(finalLockedUser);
-  await LoginPage.passwordInput.fill(finalLockedPass);
-
-  await LoginPage.loginButton.click();
+  await loginPage.loginButton.click();
 
   // Verify an error is visible
-  await expect(LoginPage.error).toBeVisible();
+  await expect(loginPage.error).toBeVisible();
 
   // Verify the expected error message displays
-  await expect(LoginPage.error).toHaveText(
+  await expect(loginPage.error).toHaveText(
     "Epic sadface: Sorry, this user has been locked out.",
   );
 });

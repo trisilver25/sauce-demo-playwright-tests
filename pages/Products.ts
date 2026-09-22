@@ -27,6 +27,12 @@ export class Products {
     this.shoppingCartBtn = this.page.getByTestId("shopping-cart-link");
   }
 
+  // methods
+
+  async goto() {
+    await this.page.goto("/inventory.html");
+  }
+
   async getProductCount() {
     return this.productCards.getByTestId("inventory-item").count();
   }
