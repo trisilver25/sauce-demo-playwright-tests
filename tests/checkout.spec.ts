@@ -1,68 +1,51 @@
-import { test, expect } from "@playwright/test";
-import { Checkout } from "../pages/Checkout";
+import { test, expect } from "../fixtures/sauce-fixtures";
 
-test("Verify checkout form errors out on submit", async ({ page }) => {
-  await page.goto("/checkout-step-one.html");
+test("Verify checkout form errors out on submit", async ({ checkoutPage }) => {
+  await checkoutPage.clickContinueBtn();
 
-  const CheckoutPage = new Checkout(page);
+  expect(checkoutPage.error).toBeVisible();
 
-  await CheckoutPage.clickContinueBtn();
-
-  expect(CheckoutPage.error).toBeVisible();
-
-  expect(CheckoutPage.error).toHaveText("Error: First Name is required");
+  expect(checkoutPage.error).toHaveText("Error: First Name is required");
 });
 
 test("Verify checkout form errors with first name only filled in", async ({
-  page,
+  checkoutPage,
 }) => {
-  await page.goto("/checkout-step-one.html");
+  await checkoutPage.setFirstName("Pokemon");
 
-  const CheckoutPage = new Checkout(page);
+  await checkoutPage.clickContinueBtn();
 
-  await CheckoutPage.setFirstName("Pokemon");
+  expect(checkoutPage.error).toBeVisible();
 
-  await CheckoutPage.clickContinueBtn();
-
-  expect(CheckoutPage.error).toBeVisible();
-
-  expect(CheckoutPage.error).toHaveText("Error: Last Name is required");
+  expect(checkoutPage.error).toHaveText("Error: Last Name is required");
 });
 
 test("Verify checkout form errors with first, and last name only filled in", async ({
-  page,
+  checkoutPage,
 }) => {
-  await page.goto("/checkout-step-one.html");
+  await checkoutPage.setFirstName("Test");
 
-  const CheckoutPage = new Checkout(page);
+  await checkoutPage.setLastName("Smit");
 
-  await CheckoutPage.setFirstName("Test");
+  await checkoutPage.clickContinueBtn();
 
-  await CheckoutPage.setLastName("Smit");
+  expect(checkoutPage.error).toBeVisible();
 
-  await CheckoutPage.clickContinueBtn();
-
-  expect(CheckoutPage.error).toBeVisible();
-
-  expect(CheckoutPage.error).toHaveText("Error: Postal Code is required");
+  expect(checkoutPage.error).toHaveText("Error: Postal Code is required");
 });
 
 test("Verify on click, the user is redirected to step test 2", async ({
-  page,
+  checkoutPage,
 }) => {
-  await page.goto("/checkout-step-one.html");
+  await checkoutPage.setFirstName("Test");
 
-  const CheckoutPage = new Checkout(page);
+  await checkoutPage.setLastName("Smitty");
 
-  await CheckoutPage.setFirstName("Test");
+  await checkoutPage.setPostalCode("32822");
 
-  await CheckoutPage.setLastName("Smitty");
+  await checkoutPage.clickContinueBtn();
 
-  await CheckoutPage.setPostalCode("32822");
-
-  await CheckoutPage.clickContinueBtn();
-
-  await expect(page).toHaveURL(
+  await expect(checkoutPage.page).toHaveURL(
     "https://www.saucedemo.com/checkout-step-two.html",
   );
 });

@@ -21,6 +21,10 @@ export class Checkout {
     this.postalCodeField = page.getByPlaceholder("Zip/Postal Code");
   }
 
+  async goto() {
+    await this.page.goto("/checkout-step-one.html");
+  }
+
   async setFirstName(name: string) {
     await this.firstNameField.fill(name);
   }

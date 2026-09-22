@@ -1,14 +1,12 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../fixtures/sauce-fixtures";
 import { Products } from "../pages/Products";
 
-test("Add a product to cart", async ({ page }) => {
+test("Add a product to cart", async ({ productsPage }) => {
   // Go to products page
-  await page.goto("/inventory.html");
-
-  const ProductsPage = new Products(page);
+  productsPage.goto();
 
   // Retrieve the first product item
-  const firstProductCard = await ProductsPage.getNthProductCard(0);
+  const firstProductCard = await productsPage.getNthProductCard(0);
 
   // Store the add to cart button from the 1st product card.
   const firstButton = firstProductCard.getByRole("button", {
@@ -19,81 +17,69 @@ test("Add a product to cart", async ({ page }) => {
   await firstButton.click();
 
   // Confirm the "1" displays in the cart button notification
-  await expect(ProductsPage.shoppingCartBtn).toHaveText("1");
+  await expect(productsPage.shoppingCartBtn).toHaveText("1");
 });
 
-test("Verify default A-Z filter", async ({ page }) => {
-  await page.goto("inventory.html");
-
-  const ProductsPage = new Products(page);
+test("Verify default A-Z filter", async ({ productsPage }) => {
+  productsPage.goto();
 
   // Select the A-Z Filter
-  await ProductsPage.setDropDownFilter("az");
+  await productsPage.setDropDownFilter("az");
 
-  const names = await ProductsPage.getAllProductNames();
+  const names = await productsPage.getAllProductNames();
 
   expect(names).toEqual([...names].sort());
 });
 
-test("Verify Z-A filter", async ({ page }) => {
-  await page.goto("inventory.html");
-
-  const ProductsPage = new Products(page);
+test("Verify Z-A filter", async ({ productsPage }) => {
+  productsPage.goto();
 
   // Select the Z-A Filter
-  await ProductsPage.setDropDownFilter("za");
+  await productsPage.setDropDownFilter("za");
 
-  const names = await ProductsPage.getAllProductNames();
+  const names = await productsPage.getAllProductNames();
 
   expect(names).toEqual([...names].sort().reverse());
 });
 
-test("Verify Price (L to H) filter", async ({ page }) => {
-  await page.goto("inventory.html");
-
-  const ProductsPage = new Products(page);
+test("Verify Price (L to H) filter", async ({ productsPage }) => {
+  productsPage.goto();
 
   // Select the Lo-Hi filter
-  await ProductsPage.setDropDownFilter("lohi");
+  await productsPage.setDropDownFilter("lohi");
 
-  const prices = await ProductsPage.getAllProductPrices();
+  const prices = await productsPage.getAllProductPrices();
 
   expect(prices).toEqual([...prices].sort((a, b) => a - b));
 });
 
-test("Verify Price (H to L) filter", async ({ page }) => {
-  await page.goto("inventory.html");
-
-  const ProductsPage = new Products(page);
+test("Verify Price (H to L) filter", async ({ productsPage }) => {
+  productsPage.goto();
 
   // Select the Hi-Lo filter
-  await ProductsPage.setDropDownFilter("hilo");
+  await productsPage.setDropDownFilter("hilo");
 
-  const prices = await ProductsPage.getAllProductPrices();
+  const prices = await productsPage.getAllProductPrices();
 
   expect(prices).toEqual([...prices].sort((a, b) => a + b));
 });
 
-test("Navigate to About Us", async ({ page }) => {
-  await page.goto("inventory.html");
+test("Navigate to About Us", async ({ productsPage }) => {
+  productsPage.goto();
 
-  const ProductPage = new Products(page);
-
-  await ProductPage.clickNavMenuBtn("about");
+  await productsPage.clickNavMenuBtn("about");
 
   // Pull the current URL of the Page
-  const currUrl = await page.url();
+  const currUrl = await productsPage.page.url();
 
   await expect(currUrl).toContain("saucelabs.com");
 });
 
-test("Logout", async ({ page }) => {
-  await page.goto("inventory.html");
+test("Logout", async ({ productsPage }) => {
+  productsPage.goto();
 
-  const ProductPage = new Products(page);
-
-  await ProductPage.clickNavMenuBtn("logout");
+  await productsPage.clickNavMenuBtn("logout");
 
   // Check if the URL Changed back to the original.
-  await expect(page).toHaveURL("");
+  await expect(productsPage.page).toHaveURL("");
 });
