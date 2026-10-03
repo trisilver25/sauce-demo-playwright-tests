@@ -4,25 +4,18 @@ import { Cart } from "../pages/Cart";
 test("Verify the product name in the cart match the product added from the Products page", async ({
   productsPage,
 }) => {
-  // Retrieve the first product item
-  const firstProductCard = await productsPage.getNthProductCard(0);
-
-  // Store the products name from the 1st product card.
-  const firstProductName = await firstProductCard
-    .locator(".inventory_item_name")
-    .first()
-    .textContent()!;
-
-  // Store the add to cart button from the 1st product card.
-  const firstButton = firstProductCard.getByRole("button", {
-    name: "Add to cart",
-  });
+  // Retrieve the Sauce Labs Backpack Product Card
+  const sauceLabsBackpack = await productsPage.getProductCardByName(
+    "Sauce Labs Backpack",
+  );
 
   // Click "Add to Cart"
-  await firstButton.click();
+  sauceLabsBackpack.clickAddToCart();
 
   // Confirm the "1" displays in the cart button notification
-  await expect(productsPage.shoppingCartBtn).toHaveText("1");
+  await expect(productsPage.shoppingCartBadge).toHaveText("1");
+
+  const productName = await sauceLabsBackpack.getName();
 
   // Click "Shopping Cart"
   await productsPage.clickShoppingCartBtn();
@@ -34,20 +27,15 @@ test("Verify the product name in the cart match the product added from the Produ
     .textContent();
 
   // Confirm the 1st product name matches the cart name
-  await expect(firstProductName).toEqual(cartProductName);
+  await expect(productName).toEqual(cartProductName);
 });
 
 test("Remove an item from the cart", async ({ productsPage }) => {
   // Retrieve the first product item
   const firstProductCard = await productsPage.getNthProductCard(0);
 
-  // Store the add to cart button from the 1st product card.
-  const firstButton = firstProductCard.getByRole("button", {
-    name: "Add to cart",
-  });
-
   // Click "Add to Cart"
-  await firstButton.click();
+  await firstProductCard.clickAddToCart();
 
   await productsPage.clickShoppingCartBtn();
 

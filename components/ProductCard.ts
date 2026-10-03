@@ -8,7 +8,6 @@ export class ProductCard {
   private readonly removeBtn: Locator;
 
   constructor(private readonly root: Locator) {
-    this.root = root;
     this.name = this.root.getByTestId("inventory-item-name");
     this.description = this.root.getByTestId("inventory-item-desc");
     this.price = this.root.getByTestId("inventory-item-price");
@@ -22,14 +21,24 @@ export class ProductCard {
 
   // to do add public methods
   async clickAddToCart() {
-    this.addToCartBtn.click();
+    await this.addToCartBtn.click();
   }
 
   async clickRemove() {
-    this.removeBtn.click();
+    await this.removeBtn.click();
   }
 
   async getDescription() {
     return this.description.innerText();
+  }
+
+  async getName() {
+    return this.name.innerText();
+  }
+
+  async getPrice() {
+    let price = this.price.innerText();
+
+    return parseFloat((await price).slice(1, (await price).length));
   }
 }
