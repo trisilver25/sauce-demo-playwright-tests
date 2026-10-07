@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { test } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { Login } from "../pages/Login";
 import { Users } from "../types/Users";
 

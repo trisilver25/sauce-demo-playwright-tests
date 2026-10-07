@@ -8,9 +8,6 @@ test("Add a product to cart", async ({ productsPage }) => {
   // Click "Add to Cart"
   await firstProductCard.clickAddToCart();
 
-  // Testing
-  console.log(await firstProductCard.getPrice());
-
   // Confirm the "1" displays in the cart button notification
   await expect(productsPage.shoppingCartBadge).toHaveText("1");
 });
@@ -44,6 +41,7 @@ test("Add a product to cart", async ({ productsPage }) => {
 ].forEach(({ description, option, compare, type }) => {
   test(`${description}`, async ({ productsPage }) => {
     // Set Filter
+
     await productsPage.setDropDownFilter(option);
 
     // get type of filter

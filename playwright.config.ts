@@ -45,15 +45,34 @@ export default defineConfig({
       dependencies: ["setup"],
     },
 
-    // {
-    //   name: "firefox",
-    //   use: { ...devices["Desktop Firefox"] },
-    // },
+    {
+      name: "firefox",
+      use: {
+        ...devices["Desktop Firefox"],
+        storageState: "playwright/.auth/user.json",
+        screenshot: "only-on-failure",
+      },
+      dependencies: ["setup"],
+    },
 
-    // {
-    //   name: "webkit",
-    //   use: { ...devices["Desktop Safari"] },
-    // },
+    {
+      name: "webkit",
+      use: {
+        ...devices["Desktop Safari"],
+        storageState: "playwright/.auth/user.json",
+        screenshot: "only-on-failure",
+      },
+      dependencies: ["setup"],
+    },
+    {
+      name: "Microsoft Edge",
+      use: {
+        ...devices["Desktop Edge"],
+        channel: "msedge",
+        storageState: "playwright/.auth/user.json",
+        screenshot: "only-on-failure",
+      },
+    },
   ],
 
   /* Run your local dev server before starting the tests */
