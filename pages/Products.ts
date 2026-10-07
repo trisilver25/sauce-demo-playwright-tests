@@ -1,4 +1,5 @@
 import { Page, Locator } from "@playwright/test";
+import { ProductCard } from "../components/ProductCard";
 
 export class Products {
   // Initial Products Page
@@ -10,6 +11,7 @@ export class Products {
   readonly about: Locator;
   readonly logout: Locator;
   readonly shoppingCartBtn: Locator;
+  readonly shoppingCartBadge: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -25,6 +27,7 @@ export class Products {
       name: "Logout",
     });
     this.shoppingCartBtn = this.page.getByTestId("shopping-cart-link");
+    this.shoppingCartBadge = this.page.getByTestId("shopping-cart-badge");
   }
 
   // methods
@@ -37,8 +40,22 @@ export class Products {
     return this.productCards.getByTestId("inventory-item").count();
   }
 
-  async getNthProductCard(num: number) {
-    return this.productCards.getByTestId("inventory-item").nth(num);
+  getProductCardByName(name: string) {
+    let locater = this.productCards
+      .getByTestId("inventory-item")
+      .filter({ hasText: name });
+
+    let productCard = new ProductCard(locater);
+
+    return productCard;
+  }
+
+  getNthProductCard(num: number) {
+    let locator = this.productCards.getByTestId("inventory-item").nth(num);
+
+    let productCard = new ProductCard(locator);
+
+    return productCard;
   }
 
   async getProductName(product: Locator) {
