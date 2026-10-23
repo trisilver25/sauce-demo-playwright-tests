@@ -45,3 +45,5 @@ userCreds.json
   }
 ]
 ```
+## Workflow status:
+[![Playwright Tests](https://github.com/trisilver25/sauce-demo-playwright-tests/actions/workflows/playwright.yml/badge.svg)](https://github.com/trisilver25/sauce-demo-playwright-tests/actions/workflows/playwright.yml)
